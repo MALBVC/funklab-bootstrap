@@ -1,8 +1,10 @@
 # PUBLIC-SAFE: no secrets, no personal values beyond the GitHub org name. Run in an ADMIN PowerShell.
 $ErrorActionPreference = 'Stop'
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+if ($env:USERNAME -ne 'Levi') { Write-Warning "Signed in as '$env:USERNAME', not 'Levi'. The scripts hard-code C:\Users\Levi. Create a local account named exactly Levi (link the Microsoft account later) and sign in as it before continuing." }
 $work = 'C:\Users\Levi\Desktop\Work'
 foreach ($id in 'Git.Git','GitHub.cli') {
-  if (-not (winget list --id $id --exact 2>$null | Select-String $id)) {
+  if (-not (winget list --id $id --exact --accept-source-agreements 2>$null | Select-String $id)) {
     winget install --id $id --exact --silent --accept-package-agreements --accept-source-agreements
   }
 }
